@@ -1,6 +1,6 @@
-# myapp
+# MapFood
 
-A new Flutter project.
+A Flutter mobile application that logs locations and reviews of food stalls in Singapore. 
 
 ## Getting Started
 
