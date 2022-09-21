@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
         routes: {
           '/add': (context) => const AddScreen(),
           '/list': (context) => const ListScreen(),
-          '/map': (context) => const MapScreen(),
+          '/map': (context) => MapSample(),
         });
   }
 }
