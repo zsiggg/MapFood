@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "463578684455",
+    "project_id": "foodpals",
+    "storage_bucket": "foodpals.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:463578684455:android:0b37e0eef73b5331b98202",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "463578684455-6q4rkhii38povckr0666om0jtausv7l9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapp",
+            "certificate_hash": "24db94c51e4bcd256bfa2d6c94608710f92ed09b"
+          }
+        },
+        {
+          "client_id": "463578684455-c9q937os5bohk3snk8apn19s0bn763cl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpBajj6KSvVPNdxvbORyTCsZGwaHz9AEg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "463578684455-c9q937os5bohk3snk8apn19s0bn763cl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "463578684455-d4rqepn1dpiurbqiofupm31qjri01k5d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.myapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

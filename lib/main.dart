@@ -1,11 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/add/add_screen.dart';
 import 'package:myapp/app_drawer.dart';
 import 'package:myapp/list/list_screen.dart';
 import 'package:myapp/map/map_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:myapp/auth.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await Auth().signInWithGoogle();
 }
 
 class MyApp extends StatefulWidget {

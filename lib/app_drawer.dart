@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/add/add_screen.dart';
 import 'package:myapp/list/list_screen.dart';
@@ -33,10 +34,12 @@ class AppDrawer extends Drawer {
               Navigator.pushNamed(context, '/map');
             },
           ),
-          const ListTile(
-            leading: Icon(Icons.logout),
-            title: Text("Log out"),
-          ),
+          ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text("Log out"),
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+              }),
         ],
       ),
     );
