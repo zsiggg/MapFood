@@ -1,18 +1,17 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/auth/auth.dart';
 
 // inspired by AmirBayat0's responsive_login_signup_screens_flutter
 // https://github.com/AmirBayat0/Responsive_login_signup_screens_flutter?ref=flutterawesome.com
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -31,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Text(
-              'Login',
+              'Register',
               style: GoogleFonts.ubuntu(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
@@ -125,81 +124,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      onPressed: () {
-                        // Validate returns true if the form is valid, or false otherwise.
-                        if (_formKey.currentState!.validate()) {
-                          // ... Navigate To your Home Page
-                        }
-                      },
+                      onPressed: () => Navigator.pushNamed(context, '/home'),
                       child: Text(
-                        'Login',
+                        'Register',
                         style: GoogleFonts.ubuntu(fontSize: 16),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 30, left: 16, right: 16),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: Container(
-                            height: 1,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            'or',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          child: Container(
-                            height: 1,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: TextButton(
-                      child: SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: Image.asset(
-                          'assets/Google.png',
-                        ),
-                      ),
-                      onPressed: () => Auth().signInWithGoogle(),
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: 'Don\'t have an account?',
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: ' Sign up',
-                          style: GoogleFonts.ubuntu(
-                            fontSize: 16,
-                            color: Colors.deepPurpleAccent,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap =
-                                () => Navigator.pushNamed(context, '/register'),
-                        ),
-                      ],
                     ),
                   ),
 

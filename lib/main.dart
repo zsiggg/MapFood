@@ -10,8 +10,10 @@ import 'package:myapp/widget_tree.dart';
 import 'firebase_options.dart';
 import 'package:myapp/auth/auth.dart';
 import 'package:myapp/home.dart';
+import 'package:myapp/auth/register_screen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -35,6 +37,8 @@ class _MyAppState extends State<MyApp> {
         '/add': (context) => const AddScreen(),
         '/list': (context) => const ListScreen(),
         '/map': (context) => MapSample(),
+        '/register': (context) => const RegisterScreen(),
+        '/home': (context) => const WidgetTree(),
       },
     );
   }
