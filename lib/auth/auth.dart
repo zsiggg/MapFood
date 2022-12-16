@@ -10,18 +10,22 @@ class Auth {
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<UserCredential> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle() async {
     // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
 
+    // No credentials to create or return if no auth details obtained
+    if (googleAuth == null) {
+      return null;
+    }
     // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
+    final OAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
     );
 
     // Once signed in, return the UserCredential
