@@ -27,4 +27,33 @@ class Auth {
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
+
+  Future<UserCredential?> signInWithEmail(String email, String password) async {
+    try {
+      return await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw FirebaseAuthException(code: e.code, message: 'No such user.');
+      } else if (e.code == 'wrong-password') {
+        throw FirebaseAuthException(code: e.code, message: 'Wrong password');
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<UserCredential?> signUpWithEmail(String email, String password) async {
+    try {
+      return await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        throw FirebaseAuthException(
+            code: e.code, message: 'Another account already uses this email.');
+      } else {
+        rethrow;
+      }
+    }
+  }
 }

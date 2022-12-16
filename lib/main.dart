@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/add/add_screen.dart';
 import 'package:myapp/app_drawer.dart';
@@ -6,10 +5,8 @@ import 'package:myapp/auth/login_screen.dart';
 import 'package:myapp/list/list_screen.dart';
 import 'package:myapp/map/map_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:myapp/widget_tree.dart';
 import 'firebase_options.dart';
 import 'package:myapp/auth/auth.dart';
-import 'package:myapp/home.dart';
 import 'package:myapp/auth/register_screen.dart';
 
 void main() async {
@@ -30,15 +27,31 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "MapFood",
-      home: const WidgetTree(),
-      routes: {
-        '/add': (context) => const AddScreen(),
-        '/list': (context) => const ListScreen(),
-        '/map': (context) => MapSample(),
-        '/register': (context) => const RegisterScreen(),
-        '/home': (context) => const WidgetTree(),
+    return StreamBuilder(
+      stream: Auth().authStateChanges,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return MaterialApp(
+            title: "MapFood",
+            home: Scaffold(
+              appBar: AppBar(title: const Text('MapFood')),
+              drawer: const AppDrawer(),
+            ),
+            routes: {
+              '/add': (context) => const AddScreen(),
+              '/list': (context) => const ListScreen(),
+              '/map': (context) => MapSample(),
+            },
+          );
+        } else {
+          return MaterialApp(
+            title: 'MapFood',
+            home: const LoginScreen(),
+            routes: {
+              '/register': (context) => const RegisterScreen(),
+            },
+          );
+        }
       },
     );
   }

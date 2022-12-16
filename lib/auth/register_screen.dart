@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/auth/auth.dart';
@@ -18,6 +20,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double height = size.height;
+
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
       body: Column(
@@ -52,6 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       fontSize: 16,
                       color: Colors.black,
                     ),
+                    controller: emailController,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.person),
                       hintText: 'Email',
@@ -78,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       color: Colors.black,
                     ),
                     obscureText: true,
-                    // controller: passwordController,
+                    controller: passwordController,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.lock_open),
                       // suffixIcon: IconButton(
@@ -124,10 +130,74 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                       ),
-                      onPressed: () => Navigator.pushNamed(context, '/home'),
+                      onPressed: () async {
+                        // Validate returns true if the form is valid, or false otherwise.
+                        if (_formKey.currentState!.validate()) {
+                          try {
+                            ScaffoldMessenger.of(context)
+                              ..clearSnackBars()
+                              ..showSnackBar(
+                                const SnackBar(
+                                  content: Text('Registering...'),
+                                  backgroundColor: Colors.blue,
+                                ),
+                              );
+                            await Auth().signUpWithEmail(
+                                emailController.text, passwordController.text);
+                          } on FirebaseAuthException catch (e) {
+                            ScaffoldMessenger.of(context)
+                              ..clearSnackBars()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text(e.message ??
+                                      'An error occurred while registering'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            return;
+                          }
+
+                          if (!mounted) return;
+                          Navigator.pushNamed(context, '/login');
+                          ScaffoldMessenger.of(context)
+                            ..clearSnackBars()
+                            ..showSnackBar(
+                              const SnackBar(
+                                content: Text('Successful registration.'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                        }
+                      },
                       child: Text(
                         'Register',
                         style: GoogleFonts.ubuntu(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 40,
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Back to ',
+                        style: GoogleFonts.ubuntu(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'login',
+                            style: GoogleFonts.ubuntu(
+                              fontSize: 16,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => Navigator.pushNamed(context, '/'),
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +20,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double height = size.height;
+
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
       body: Column(
@@ -53,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: 16,
                       color: Colors.black,
                     ),
+                    controller: emailController,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.person),
                       hintText: 'Email',
@@ -79,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.black,
                     ),
                     obscureText: true,
-                    // controller: passwordController,
+                    controller: passwordController,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.lock_open),
                       // suffixIcon: IconButton(
@@ -125,11 +130,40 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         // Validate returns true if the form is valid, or false otherwise.
                         if (_formKey.currentState!.validate()) {
                           // ... Navigate To your Home Page
+                          try {
+                            ScaffoldMessenger.of(context)
+                              ..clearSnackBars()
+                              ..showSnackBar(
+                                const SnackBar(
+                                  content: Text('Logging in...'),
+                                  backgroundColor: Colors.blue,
+                                ),
+                              );
+                            await Auth().signInWithEmail(
+                                emailController.text, passwordController.text);
+                          } on FirebaseAuthException catch (e) {
+                            ScaffoldMessenger.of(context)
+                              ..clearSnackBars()
+                              ..showSnackBar(SnackBar(
+                                content: Text(e.message ??
+                                    'An error occured while logging in'),
+                                backgroundColor: Colors.red,
+                              ));
+                            return;
+                          }
                         }
+
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context)
+                          ..clearSnackBars()
+                          ..showSnackBar(const SnackBar(
+                            content: Text('Logged in successfully'),
+                            backgroundColor: Colors.green,
+                          ));
                       },
                       child: Text(
                         'Login',
@@ -168,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.only(top: 16, bottom: 16),
                     child: TextButton(
                       child: SizedBox(
                         height: 50,

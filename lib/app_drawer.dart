@@ -37,8 +37,33 @@ class AppDrawer extends Drawer {
           ListTile(
               leading: const Icon(Icons.logout),
               title: const Text("Log out"),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
+              onTap: () async {
+                // workaround for using BuildContext across async gaps error
+                final NavigatorState navigator = Navigator.of(context);
+
+                try {
+                  await FirebaseAuth.instance.signOut();
+                } on FirebaseAuthException catch (e) {
+                  ScaffoldMessenger.of(context)
+                    ..clearSnackBars()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            e.message ?? 'An error occurred while logging out'),
+                      ),
+                    );
+                  return;
+                }
+
+                ScaffoldMessenger.of(context)
+                  ..clearSnackBars()
+                  ..showSnackBar(
+                    const SnackBar(
+                      content: Text('Logged out'),
+                      backgroundColor: Colors.blue,
+                    ),
+                  );
+                navigator.pushNamed('/');
               }),
         ],
       ),
