@@ -57,15 +57,16 @@ class AddWidgetState extends State<AddWidget> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if (_formState.currentState!.validate()) {
-                      // display message in snackbar
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Sending data to firebase'),
-                          duration: Duration(seconds: 3),
-                        ),
-                      );
+                    if (!(_formState.currentState!.validate())) {
+                      return;
                     }
+                    // display message in snackbar
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Sending data to firebase'),
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
                   },
                   child: const Text("Submit"),
                 ),

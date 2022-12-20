@@ -132,29 +132,30 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       onPressed: () async {
                         // Validate returns true if the form is valid, or false otherwise.
-                        if (_formKey.currentState!.validate()) {
-                          // ... Navigate To your Home Page
-                          try {
-                            ScaffoldMessenger.of(context)
-                              ..clearSnackBars()
-                              ..showSnackBar(
-                                const SnackBar(
-                                  content: Text('Logging in...'),
-                                  backgroundColor: Colors.blue,
-                                ),
-                              );
-                            await Auth().signInWithEmail(
-                                emailController.text, passwordController.text);
-                          } on FirebaseAuthException catch (e) {
-                            ScaffoldMessenger.of(context)
-                              ..clearSnackBars()
-                              ..showSnackBar(SnackBar(
-                                content: Text(e.message ??
-                                    'An error occured while logging in'),
-                                backgroundColor: Colors.red,
-                              ));
-                            return;
-                          }
+                        if (!(_formKey.currentState!.validate())) {
+                          return;
+                        }
+                        // ... Navigate To your Home Page
+                        try {
+                          ScaffoldMessenger.of(context)
+                            ..clearSnackBars()
+                            ..showSnackBar(
+                              const SnackBar(
+                                content: Text('Logging in...'),
+                                backgroundColor: Colors.blue,
+                              ),
+                            );
+                          await Auth().signInWithEmail(
+                              emailController.text, passwordController.text);
+                        } on FirebaseAuthException catch (e) {
+                          ScaffoldMessenger.of(context)
+                            ..clearSnackBars()
+                            ..showSnackBar(SnackBar(
+                              content: Text(e.message ??
+                                  'An error occured while logging in'),
+                              backgroundColor: Colors.red,
+                            ));
+                          return;
                         }
 
                         if (!mounted) return;

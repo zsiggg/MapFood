@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/add/add_screen.dart';
-import 'package:myapp/app_drawer.dart';
-import 'package:myapp/auth/login_screen.dart';
-import 'package:myapp/list/list_screen.dart';
-import 'package:myapp/map/map_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:myapp/navigator_main.dart';
+import 'package:myapp/navigator_onboarding.dart';
 import 'firebase_options.dart';
 import 'package:myapp/auth/auth.dart';
-import 'package:myapp/auth/register_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,34 +20,25 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: Auth().authStateChanges,
       builder: (context, snapshot) {
+        Widget navigator;
+
+        // if user is not logged in, display login screen
         if (snapshot.hasData) {
-          return MaterialApp(
-            title: "MapFood",
-            home: Scaffold(
-              appBar: AppBar(title: const Text('MapFood')),
-              drawer: const AppDrawer(),
-            ),
-            routes: {
-              '/add': (context) => const AddScreen(),
-              '/list': (context) => const ListScreen(),
-              '/map': (context) => MapSample(),
-            },
-          );
+          navigator = const NavigatorMain();
         } else {
-          return MaterialApp(
-            title: 'MapFood',
-            home: const LoginScreen(),
-            routes: {
-              '/register': (context) => const RegisterScreen(),
-            },
-          );
+          navigator = const NavigatorOnboarding();
         }
+
+        return MaterialApp(
+          title: "MapFood",
+          home: navigator,
+        );
       },
     );
   }

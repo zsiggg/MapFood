@@ -132,42 +132,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       onPressed: () async {
                         // Validate returns true if the form is valid, or false otherwise.
-                        if (_formKey.currentState!.validate()) {
-                          try {
-                            ScaffoldMessenger.of(context)
-                              ..clearSnackBars()
-                              ..showSnackBar(
-                                const SnackBar(
-                                  content: Text('Registering...'),
-                                  backgroundColor: Colors.blue,
-                                ),
-                              );
-                            await Auth().signUpWithEmail(
-                                emailController.text, passwordController.text);
-                          } on FirebaseAuthException catch (e) {
-                            ScaffoldMessenger.of(context)
-                              ..clearSnackBars()
-                              ..showSnackBar(
-                                SnackBar(
-                                  content: Text(e.message ??
-                                      'An error occurred while registering'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            return;
-                          }
+                        if (!(_formKey.currentState!.validate())) {
+                          return;
+                        }
 
-                          if (!mounted) return;
-                          Navigator.pushNamed(context, '/login');
+                        try {
                           ScaffoldMessenger.of(context)
                             ..clearSnackBars()
                             ..showSnackBar(
                               const SnackBar(
-                                content: Text('Successful registration.'),
-                                backgroundColor: Colors.green,
+                                content: Text('Registering...'),
+                                backgroundColor: Colors.blue,
                               ),
                             );
+                          await Auth().signUpWithEmail(
+                              emailController.text, passwordController.text);
+                        } on FirebaseAuthException catch (e) {
+                          ScaffoldMessenger.of(context)
+                            ..clearSnackBars()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(e.message ??
+                                    'An error occurred while registering'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          return;
                         }
+
+                        if (!mounted) return;
+                        Navigator.pushNamed(context, '/');
+                        ScaffoldMessenger.of(context)
+                          ..clearSnackBars()
+                          ..showSnackBar(
+                            const SnackBar(
+                              content: Text('Successful registration.'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
                       },
                       child: Text(
                         'Register',
