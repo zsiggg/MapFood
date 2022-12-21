@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/auth/login_screen.dart';
-import 'package:myapp/auth/register_screen.dart';
+import 'package:myapp/onboarding/login_screen.dart';
+import 'package:myapp/onboarding/register_screen.dart';
 
 class NavigatorOnboarding extends StatelessWidget {
   const NavigatorOnboarding({Key? key}) : super(key: key);

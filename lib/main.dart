@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:myapp/navigator_main.dart';
 import 'package:myapp/navigator_onboarding.dart';
 import 'firebase_options.dart';
-import 'package:myapp/auth/auth.dart';
+import 'package:myapp/onboarding/auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

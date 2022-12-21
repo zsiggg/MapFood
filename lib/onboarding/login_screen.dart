@@ -2,18 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myapp/auth/auth.dart';
+import 'package:myapp/onboarding/auth.dart';
 
 // inspired by AmirBayat0's responsive_login_signup_screens_flutter
 // https://github.com/AmirBayat0/Responsive_login_signup_screens_flutter?ref=flutterawesome.com
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -35,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Text(
-              'Register',
+              'Login',
               style: GoogleFonts.ubuntu(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
@@ -135,72 +135,106 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         if (!(_formKey.currentState!.validate())) {
                           return;
                         }
-
+                        // ... Navigate To your Home Page
                         try {
                           ScaffoldMessenger.of(context)
                             ..clearSnackBars()
                             ..showSnackBar(
                               const SnackBar(
-                                content: Text('Registering...'),
+                                content: Text('Logging in...'),
                                 backgroundColor: Colors.blue,
                               ),
                             );
-                          await Auth().signUpWithEmail(
+                          await Auth().signInWithEmail(
                               emailController.text, passwordController.text);
                         } on FirebaseAuthException catch (e) {
                           ScaffoldMessenger.of(context)
                             ..clearSnackBars()
-                            ..showSnackBar(
-                              SnackBar(
-                                content: Text(e.message ??
-                                    'An error occurred while registering'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
+                            ..showSnackBar(SnackBar(
+                              content: Text(e.message ??
+                                  'An error occured while logging in'),
+                              backgroundColor: Colors.red,
+                            ));
                           return;
                         }
 
                         if (!mounted) return;
-                        Navigator.pushNamed(context, '/');
                         ScaffoldMessenger.of(context)
                           ..clearSnackBars()
-                          ..showSnackBar(
-                            const SnackBar(
-                              content: Text('Successful registration.'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
+                          ..showSnackBar(const SnackBar(
+                            content: Text('Logged in successfully'),
+                            backgroundColor: Colors.green,
+                          ));
                       },
                       child: Text(
-                        'Register',
+                        'Login',
                         style: GoogleFonts.ubuntu(fontSize: 16),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
-                      top: 40,
-                    ),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Back to ',
-                        style: GoogleFonts.ubuntu(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: 'login',
-                            style: GoogleFonts.ubuntu(
-                              fontSize: 16,
-                              color: Colors.deepPurpleAccent,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => Navigator.pushNamed(context, '/'),
+                    padding:
+                        const EdgeInsets.only(top: 30, left: 16, right: 16),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Container(
+                            height: 1,
+                            color: Colors.grey,
                           ),
-                        ],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'or',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          child: Container(
+                            height: 1,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16, bottom: 16),
+                    child: TextButton(
+                      child: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: Image.asset(
+                          'assets/Google.png',
+                        ),
                       ),
+                      onPressed: () => Auth().signInWithGoogle(),
+                    ),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Don\'t have an account?',
+                      style: GoogleFonts.ubuntu(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: ' Sign up',
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 16,
+                            color: Colors.deepPurpleAccent,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap =
+                                () => Navigator.pushNamed(context, '/register'),
+                        ),
+                      ],
                     ),
                   ),
 
