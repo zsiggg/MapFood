@@ -40,8 +40,7 @@ class _NavigatorMainState extends State<NavigatorMain>
               );
           break;
         case 'map':
-          builder = (context) =>
-              MapWidget(setFloatingActionButton: setFloatingActionButton);
+          builder = (context) => const MapWidget();
           break;
         // case '/settings':
         //   print('To be implemented');

@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapWidget extends StatefulWidget {
-  const MapWidget({Key? key, required this.setFloatingActionButton})
-      : super(key: key);
-
-  final Function(FloatingActionButton) setFloatingActionButton;
+  const MapWidget({Key? key}) : super(key: key);
 
   @override
   State<MapWidget> createState() => MapWidgetState();
@@ -28,11 +25,11 @@ class MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    widget.setFloatingActionButton(FloatingActionButton.extended(
-      onPressed: _goToTheLake,
-      label: const Text('To the lake!'),
-      icon: const Icon(Icons.directions_boat),
-    ));
+    // widget.setFloatingActionButton(FloatingActionButton.extended(
+    //   onPressed: _goToTheLake,
+    //   label: const Text('To the lake!'),
+    //   icon: const Icon(Icons.directions_boat),
+    // ));
 
     return GoogleMap(
       myLocationButtonEnabled: true,
@@ -48,8 +45,8 @@ class MapWidgetState extends State<MapWidget> {
     );
   }
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }
+  // Future<void> _goToTheLake() async {
+  //   final GoogleMapController controller = await _controller.future;
+  //   controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  // }
 }
