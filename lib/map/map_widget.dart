@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Filter;
 
 class MapWidget extends StatefulWidget {
   const MapWidget({Key? key}) : super(key: key);
@@ -30,6 +31,15 @@ class MapWidgetState extends State<MapWidget> {
     //   label: const Text('To the lake!'),
     //   icon: const Icon(Icons.directions_boat),
     // ));
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    final docRef = db.collection("stalls").doc("RphFhWrY3pizzXER2SwX");
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        print(data);
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
 
     return GoogleMap(
       myLocationButtonEnabled: true,

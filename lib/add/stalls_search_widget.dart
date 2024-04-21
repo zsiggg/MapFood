@@ -8,8 +8,10 @@ class StallsSearchWidget extends SearchDelegate<String> {
     apiKey: dotenv.env['ALGOLIA_API_KEY'] ?? '',
     indexName: 'stalls',
   );
+  // final Uri _placesApiUri =
+  //     Uri.parse('https://places.googleapis.com/v1/places:autocomplete');
 
-  Stream<SearchResponse> get _searchResponses {
+  Stream<SearchResponse> get searchResponses {
     return _stallsSearcher.responses;
   }
 
@@ -44,12 +46,82 @@ class StallsSearchWidget extends SearchDelegate<String> {
     }
     _stallsSearcher.query(query);
 
+    // Future<http.Response> placesApiResponse = http.post(_placesApiUri, body: {
+    //   'input': query,
+    //   'languageCode': 'en',
+    //   'includedRegionCodes': 'sg'
+    // }, headers: {
+    //   'X-Goog-Api-key': dotenv.env['PLACES_API_KEY']!
+    // });
+
+    // return FutureBuilder<http.Response>(
+    //     future: placesApiResponse,
+    //     builder: ((context, snapshot) {
+    //       if (snapshot.connectionState == ConnectionState.waiting) {
+    //         return const LinearProgressIndicator();
+    //       } else if (snapshot.hasData) {
+    //         final json = jsonDecode(snapshot.data!.body);
+    //         print((const JsonEncoder.withIndent('  '))
+    //             .convert(json)); // pretty print
+    //         final List<Map<String, dynamic>> suggestions;
+    //         switch (json) {
+    //           case ({'suggestions': List placePrediction}):
+    //             suggestions = placePrediction.map((suggestion) {
+    //               final nameLocation =
+    //                   suggestion['placePrediction']['text']['text'];
+    //               final name = suggestion['placePrediction']['structuredFormat']
+    //                   ['mainText']['text'];
+    //               final location = suggestion['placePrediction']
+    //                   ['structuredFormat']['secondaryText']['text'];
+    //               return {
+    //                 'nameLocation': nameLocation,
+    //                 'name': name,
+    //                 'location': location
+    //               };
+    //             }).toList();
+    //           default:
+    //             throw 'Unexpected JSON format';
+    //         }
+    //         return ListView.builder(
+    //           itemBuilder: (context, index) => ListTile(
+    //             title: Text(suggestions[index]['nameLocation']),
+    //             // title: index < names.length
+    //             // ? Text(names[index])
+    //             // : Align(
+    //             //     alignment: Alignment.centerLeft,
+    //             //     child: TextButton.icon(
+    //             //       icon: Icon(
+    //             //         Icons.add,
+    //             //         color: Theme.of(context).hintColor,
+    //             //       ),
+    //             //       label: Text(
+    //             //         'Create new stall',
+    //             //         style: TextStyle(color: Theme.of(context).hintColor),
+    //             //       ),
+    //             //       onPressed: () => close(context, query),
+    //             //     ),
+    //             //   ),
+    //             onTap: () {
+    //               close(context, '');
+    //             },
+    //             shape: Border(
+    //               bottom: BorderSide(color: Theme.of(context).dividerColor),
+    //             ),
+    //           ),
+    //           itemCount: suggestions.length,
+    //         );
+    //       } else {
+    //         print(snapshot.error);
+    //         return const Text('An error has occurred.');
+    //       }
+    //     }));
+
     return StreamBuilder<SearchResponse>(
       // We will put the api call here
-      stream: _searchResponses,
+      stream: searchResponses,
       builder: (context, snapshot) {
-        print(snapshot);
-        print(snapshot.data?.nbHits ?? '0 hits');
+        // print(snapshot);
+        // print(snapshot.data?.nbHits ?? '0 hits');
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LinearProgressIndicator();
         } else if (snapshot.hasData && snapshot.data!.nbHits > 0) {

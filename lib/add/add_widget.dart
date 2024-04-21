@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
+import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
 import 'package:myapp/add/stalls_search_widget.dart';
 import 'package:myapp/onboarding/auth.dart';
 
@@ -22,6 +23,7 @@ class AddWidgetState extends State<AddWidget> {
   double _rating = 0;
 
   final _filterState = FilterState();
+  final stallsSearchWidget = StallsSearchWidget();
   final _stallsSearcher = HitsSearcher(
     applicationID: dotenv.env['ALGOLIA_APPLICATION_ID'] ?? '',
     apiKey: dotenv.env['ALGOLIA_API_KEY'] ?? '',
@@ -92,7 +94,7 @@ class AddWidgetState extends State<AddWidget> {
                   onTap: () async {
                     String? res = await showSearch(
                       context: context,
-                      delegate: StallsSearchWidget(),
+                      delegate: stallsSearchWidget,
                       query: _nameController.text,
                     );
 
@@ -103,11 +105,10 @@ class AddWidgetState extends State<AddWidget> {
                   },
                 ),
                 StreamBuilder<SearchResponse>(
-                  stream: _searchResponses,
+                  stream: stallsSearchWidget.searchResponses,
                   builder: (context, snapshot) {
                     if (_nameController.text == '') {
                       return TextFormField(
-                        controller: _locationController,
                         decoration: const InputDecoration(
                           border: UnderlineInputBorder(),
                           labelText: 'Location',
@@ -134,31 +135,53 @@ class AddWidgetState extends State<AddWidget> {
 
                       return Container(
                         child: _isNewLocation
-                            ? TextFormField(
-                                controller: _locationController,
+                            // ? TextFormField(
+                            //     controller: _locationController,
+                            //     readOnly: _isLocationFieldDisabled,
+                            //     decoration: InputDecoration(
+                            //       border: const UnderlineInputBorder(),
+                            //       labelText: 'New Location',
+                            //       icon: IconButton(
+                            //         icon: const Icon(Icons.arrow_back),
+                            //         onPressed: () => setState(() {
+                            //           _isNewLocation = false;
+                            //         }),
+                            //       ),
+                            //       helperText:
+                            //           'Click "Back" to select from existing locations',
+                            //       fillColor:
+                            //           const Color.fromARGB(50, 208, 210, 212),
+                            //       filled: true,
+                            //     ),
+                            //     validator: (value) {
+                            //       if (value == '') {
+                            //         return 'Enter a location';
+                            //       }
+                            //     },
+                            //   )
+                            ? GooglePlacesAutoCompleteTextFormField(
+                                textEditingController: _locationController,
+                                googleAPIKey:
+                                    dotenv.env['PLACES_API_KEY'] ?? '',
+                                itmClick: (prediction) {
+                                  _locationController.text =
+                                      prediction.description ?? '';
+                                },
                                 decoration: InputDecoration(
-                                  border: const UnderlineInputBorder(),
-                                  labelText: 'New Location',
                                   icon: IconButton(
                                     icon: const Icon(Icons.arrow_back),
                                     onPressed: () => setState(() {
                                       _isNewLocation = false;
                                     }),
                                   ),
+                                  labelText: 'New Location',
                                   helperText:
-                                      'Click "Back" to select from existing locations',
-                                  fillColor:
-                                      const Color.fromARGB(50, 208, 210, 212),
-                                  filled: true,
+                                      'Click \'Back\' to select from existing locations',
                                 ),
-                                validator: (value) {
-                                  if (value == '') {
-                                    return 'Enter a location';
-                                  }
-                                },
-                              )
+                                countries: const ['SG'])
                             : DropdownButtonFormField<String>(
-                                value: dropdownListFirstOption,
+                                value: _locationController.text,
+                                isExpanded: true,
                                 decoration: const InputDecoration(
                                   border: UnderlineInputBorder(),
                                   labelText: 'Location',
@@ -184,7 +207,7 @@ class AddWidgetState extends State<AddWidget> {
                                         icon: Icon(Icons.add,
                                             color: Theme.of(context).hintColor),
                                         label: Text(
-                                          'Create new stall',
+                                          'Add a new location',
                                           style: TextStyle(
                                               color:
                                                   Theme.of(context).hintColor),
@@ -202,21 +225,32 @@ class AddWidgetState extends State<AddWidget> {
                       _isNewLocation = true;
                       _locationController.text = '';
 
-                      return TextFormField(
-                        controller: _locationController,
-                        decoration: const InputDecoration(
-                          border: UnderlineInputBorder(),
-                          labelText: 'Location',
-                          helperText: 'Enter location for new stall',
-                          fillColor: Color.fromARGB(50, 208, 210, 212),
-                          filled: true,
-                        ),
-                        validator: (value) {
-                          if (value == '') {
-                            return 'Enter a location';
-                          }
-                        },
-                      );
+                      // return TextFormField(
+                      //   controller: _locationController,
+                      //   decoration: const InputDecoration(
+                      //     border: UnderlineInputBorder(),
+                      //     labelText: 'Location',
+                      //     helperText: 'Enter location for new stall',
+                      //     fillColor: Color.fromARGB(50, 208, 210, 212),
+                      //     filled: true,
+                      //   ),
+                      //   validator: (value) {
+                      //     if (value == '') {
+                      //       return 'Enter a location';
+                      //     }
+                      //   },
+                      // );
+                      return GooglePlacesAutoCompleteTextFormField(
+                          textEditingController: _locationController,
+                          googleAPIKey: dotenv.env['PLACES_API_KEY'] ?? '',
+                          itmClick: (prediction) {
+                            _locationController.text =
+                                prediction.description ?? '';
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'New Location',
+                          ),
+                          countries: const ['SG']);
                     } else {
                       _isSubmitDisabled = true;
 
@@ -286,7 +320,8 @@ class AddWidgetState extends State<AddWidget> {
                       return 'Give a rating';
                     }
                   },
-                  enabled: _nameController.text != '',
+                  enabled: _nameController.text != '' &&
+                      _locationController.text != '',
                 ),
                 Align(
                   alignment: Alignment.centerRight,
